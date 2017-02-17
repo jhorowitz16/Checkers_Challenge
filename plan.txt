@@ -1,0 +1,40 @@
+Phase One
+
+    get the basics done - display the starting board!
+
+    Checker class 
+        color
+        id
+        is_active
+
+    Board class
+        represent the board as 8 by 8 array
+        add Check objects
+        to_string - simple printout
+
+        ___ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+        __ __ __ __ __ __ __ __
+
+Phase Two
+    UI for making moves
+    search for all checkers that have the option to move
+        print the positions of those checkers and where they can go
+            ==> maintain a set of all checkers
+                iterate thru that set
+                check if +1 +1 is unoccupied
+
+    a move is delete the old checker and make a new one in the new place
+
+Phase Three
+    jumps
+    search for jumps like before
+    same but remove the old checker
+    remove it from the checker set globally
+
+    print the board again
