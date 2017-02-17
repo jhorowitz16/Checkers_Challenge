@@ -7,6 +7,11 @@ from Checker import Checker
 SIZE = 8
 X = 'X'
 O = 'O'
+UR = 'UR'
+UL = 'UR'
+DR = 'DR'
+DL = 'DL'
+BLANK = '_'
 
 class Board:
     
@@ -84,7 +89,45 @@ class Board:
                     if i < SIZE-1 and j < SIZE-1 and not self.h_board[i+1][j-1]:
                         # below and right 
                         print(" >>> downright move available")
+
+    def get_X_moves(self):
+        """
+        just get the moves
+        """
+        moves = []
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if self.d_board[i][j] == X:
+                    if i < SIZE-1 and j > 0 and not self.h_board[i+1][j-1]:
+                        moves.append(((i, j), 'DL'))
+                    if i < SIZE-1 and j < SIZE-1 and not self.h_board[i+1][j-1]:
+                        moves.append(((i, j), 'DR'))
+        return moves
         
+    def get_O_moves(self):
+        """
+        just get the moves
+        """
+        moves = []
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if self.d_board[i][j] == O:
+                    if i > 0 and j > 0 and not self.h_board[i-1][j-1]:
+                        moves.append(((i, j), 'UL'))
+                    if i > 0 and j < SIZE-1 and not self.h_board[i-1][j-1]:
+                        moves.append(((i, j), 'UR'))
+        return moves
+
+    def enumerate_moves(self, moves):
+        """
+        take a set of legal moves, and number them off with letters
+        """
+        print("Where would you like to move?")
+        curr = 65  # capital A 
+        for move in moves:
+            print(chr(curr) + ") Piece at " + str(move[0]) + " " + str(move[1]) + "?")
+            curr += 1
+            
 
     def print_legal_O_moves(self):
         """
@@ -105,6 +148,41 @@ class Board:
                         # up and right 
                         print(" >>> upright move available")
 
+    def make_move(self, move, team):
+        """
+        make the move here - where move is a starting coordinate and a direction tuple
+        """
+        s = move[0]  # starting tuple x,y
+        direction = move[1]  # UR UL DR or DL
+
+        # get the piece at the sing location, then move it
+        # remember to update both hidden and display
+        piece = self.h_board[s[0]][s[1]]
+        a = s[0]
+        b = s[1]
+        if not piece:
+            print("NO PIECE FOUND, INVALID MOVE")
+        else:
+            self.h_board[a][b] = None
+            self.d_board[a][b] = BLANK 
+            if direction == UR:
+                self.h_board[a-1][b+1] = piece
+                self.d_board[a-1][b+1] = team
+            elif direction == UL:
+                self.h_board[a-1][b-1] = piece
+                self.d_board[a-1][b-1] = team
+            elif direction == DR:
+                self.h_board[a+1][b+1] = piece
+                self.d_board[a-1][b+1] = team
+            elif direction == DL:
+                self.h_board[a+1][b-1] = piece
+                self.d_board[a-1][b-1] = team
+            else:
+                print("BAD DIRECTION, INVALID MOVE")
+                
+        
+
+    # utils
 
     def __repr__(self):
         return self.name + " | " + str(self.h_board)
