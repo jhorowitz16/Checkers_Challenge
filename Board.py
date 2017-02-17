@@ -3,7 +3,13 @@ Represent the board as a 8 by 8 array, full of checker objects
 """
 from Checker import Checker
 
+# constants here
+SIZE = 8
+X = 'X'
+O = 'O'
+
 class Board:
+    
 
     def __init__(self, name="my_board"):
         self.checkers = []
@@ -58,6 +64,46 @@ class Board:
                 ret_str += " _" + spot + "_ "
             print(ret_str + " |")
         print("  --------------------------------------------\n\n")
+
+
+    def print_legal_X_moves(self):
+        """
+        for the desired team, print all legal moves (not jumps)
+        """
+        print("\nLEGAL X MOVES")
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if self.d_board[i][j] == X:
+                    # found a piece of this team
+                    print("found a X at " + str((i, j)))
+                    # Xs must move down, so check larger rows
+                    # WATCH OUT not on the end
+                    if i < SIZE-1 and j > 0 and not self.h_board[i+1][j-1]:
+                        # below and left
+                        print(" >>> downleft move available")
+                    if i < SIZE-1 and j < SIZE-1 and not self.h_board[i+1][j-1]:
+                        # below and right 
+                        print(" >>> downright move available")
+        
+
+    def print_legal_O_moves(self):
+        """
+        for the desired team, print all legal moves (not jumps)
+        """
+        print("\nLEGAL O MOVES")
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if self.d_board[i][j] == O:
+                    # found a piece of this team
+                    print("found a O at " + str((i, j)))
+                    # Os must move up, so check smaller rows
+                    # WATCH OUT not on the end
+                    if i > 0 and j > 0 and not self.h_board[i-1][j-1]:
+                        # up and left
+                        print(" >>> upleft move available")
+                    if i > 0 and j < SIZE-1 and not self.h_board[i-1][j-1]:
+                        # up and right 
+                        print(" >>> upright move available")
 
 
     def __repr__(self):
