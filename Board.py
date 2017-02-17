@@ -8,7 +8,7 @@ SIZE = 8
 X = 'X'
 O = 'O'
 UR = 'UR'
-UL = 'UR'
+UL = 'UL'
 DR = 'DR'
 DL = 'DL'
 BLANK = '_'
@@ -114,7 +114,7 @@ class Board:
                 if self.d_board[i][j] == O:
                     if i > 0 and j > 0 and not self.h_board[i-1][j-1]:
                         moves.append(((i, j), 'UL'))
-                    if i > 0 and j < SIZE-1 and not self.h_board[i-1][j-1]:
+                    if i > 0 and j < SIZE-1 and not self.h_board[i-1][j+1]:
                         moves.append(((i, j), 'UR'))
         return moves
 
@@ -173,10 +173,10 @@ class Board:
                 self.d_board[a-1][b-1] = team
             elif direction == DR:
                 self.h_board[a+1][b+1] = piece
-                self.d_board[a-1][b+1] = team
+                self.d_board[a+1][b+1] = team
             elif direction == DL:
                 self.h_board[a+1][b-1] = piece
-                self.d_board[a-1][b-1] = team
+                self.d_board[a+1][b-1] = team
             else:
                 print("BAD DIRECTION, INVALID MOVE")
                 
