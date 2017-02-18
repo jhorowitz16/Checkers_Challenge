@@ -100,7 +100,21 @@ class Board:
                 if self.d_board[i][j] == X:
                     if i < SIZE-1 and j > 0 and not self.h_board[i+1][j-1]:
                         moves.append(((i, j), 'DL'))
-                    if i < SIZE-1 and j < SIZE-1 and not self.h_board[i+1][j-1]:
+                    if i < SIZE-1 and j < SIZE-1 and not self.h_board[i+1][j+1]:
+                        moves.append(((i, j), 'DR'))
+        return moves
+
+    def get_X_jumps(self):
+        """
+        just get the jumps - similar to getting the moves
+        """
+        moves = []
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if self.d_board[i][j] == X:
+                    if i < SIZE-2 and j > 1 and self.d_board[i+1][j-1] == O and not self.h_board[i+2][j-2]:
+                        moves.append(((i, j), 'DL'))
+                    if i < SIZE-2 and j < SIZE-2 and self.d_board[i+1][j+1] == O and not self.h_board[i+2][j+2]:
                         moves.append(((i, j), 'DR'))
         return moves
         
@@ -116,6 +130,22 @@ class Board:
                         moves.append(((i, j), 'UL'))
                     if i > 0 and j < SIZE-1 and not self.h_board[i-1][j+1]:
                         moves.append(((i, j), 'UR'))
+        return moves
+
+    def get_O_jumps(self):
+        """
+        just get the jumps 
+        """
+        moves = []
+        for i in range(SIZE):
+            for j in range(SIZE):
+                if self.d_board[i][j] == O:
+                    if i > 1 and j > 1 and self.d_board[i-1][j-1] == X and not self.h_board[i-2][j-2]:
+                        moves.append(((i, j), 'UL'))
+                    if i > 0 and j < SIZE-1 and self.d_board[i-1][j+1] == X and not self.h_board[i-2][j+2]:
+                        moves.append(((i, j), 'UR'))
+        if moves:
+            print("WE FUOND SOME JUMPS")
         return moves
 
     def enumerate_moves(self, moves):
@@ -180,6 +210,46 @@ class Board:
             else:
                 print("BAD DIRECTION, INVALID MOVE")
                 
+    def make_jump(self, move, team):
+        """
+        make the move here - where move is a starting coordinate and a direction tuple
+        """
+        s = move[0]  # starting tuple x,y
+        direction = move[1]  # UR UL DR or DL
+
+        # get the piece at the sing location, then move it
+        # remember to update both hidden and display
+        piece = self.h_board[s[0]][s[1]]
+        a = s[0]
+        b = s[1]
+        if not piece:
+            print("NO PIECE FOUND, INVALID MOVE")
+        else:
+            self.h_board[a][b] = None
+            self.d_board[a][b] = BLANK 
+            if direction == UR:
+                self.h_board[a-2][b+2] = piece
+                self.d_board[a-2][b+2] = team
+                self.h_board[a-1][b+1] = None
+                self.d_board[a-1][b+1] = BLANK 
+                
+            elif direction == UL:
+                self.h_board[a-2][b-2] = piece
+                self.d_board[a-2][b-2] = team
+                self.h_board[a-1][b-1] = None
+                self.d_board[a-1][b-1] = BLANK 
+            elif direction == DR:
+                self.h_board[a+2][b+2] = piece
+                self.d_board[a+2][b+2] = team
+                self.h_board[a+1][b+1] = None
+                self.d_board[a+1][b+1] = BLANK 
+            elif direction == DL:
+                self.h_board[a+2][b-2] = piece
+                self.d_board[a+2][b-2] = team
+                self.h_board[a+1][b-1] = None
+                self.d_board[a+1][b-1] = BLANK 
+            else:
+                print("BAD DIRECTION, INVALID MOVE")
         
 
     # utils
@@ -189,7 +259,3 @@ class Board:
 
     def __str__(self):
         return str(self.d_board)
-
-        
-
-

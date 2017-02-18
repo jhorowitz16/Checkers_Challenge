@@ -1,5 +1,6 @@
 """
-here's my main runner
+Joshua Horowitz Coding Challenge
+Feb 2017
 """
 from Board import Board
 
@@ -21,8 +22,18 @@ def O_turn(mb):
     """
     take a single turn for the 'O' player
     """
-    moves = mb.get_O_moves()
-    mb.enumerate_moves(moves)
+    jumps = mb.get_O_jumps()
+    if jumps:
+        print("JUMPS AVAILABLE - forced to jump!")
+        mb.enumerate_moves(jumps)
+        moves = jumps
+        jump = True
+    else:
+        moves = mb.get_O_moves()
+        mb.enumerate_moves(moves)
+        jump = False 
+
+
     selection = ''
     while not selection:
         selection = raw_input("Select a move for the 'O' player: ")
@@ -33,7 +44,10 @@ def O_turn(mb):
     if index >= 0 and index < len(moves):
         move = moves[index]
         print("You have selected: " + str(move))
-        mb.make_move(move, 'O')
+        if jump:
+            mb.make_jump(move, 'O')
+        else:
+            mb.make_move(move, 'O')
     else:
         print("INVALID MOVE")
     mb.display()
@@ -41,10 +55,20 @@ def O_turn(mb):
 
 def X_turn(mb):
     """
-    take a single turn for the 'O' player
+    take a single turn for the 'X' player
     """
-    moves = mb.get_X_moves()
-    mb.enumerate_moves(moves)
+    jumps = mb.get_X_jumps()
+    if jumps:
+        print("JUMPS AVAILABLE - forced to jump!")
+        mb.enumerate_moves(jumps)
+        moves = jumps
+        jump = True
+    else:
+        moves = mb.get_X_moves()
+        mb.enumerate_moves(moves)
+        jump = False 
+
+
     selection = ''
     while not selection:
         selection = raw_input("Select a move for the 'X' player: ")
@@ -56,20 +80,18 @@ def X_turn(mb):
     if index >= 0 and index < len(moves):
         move = moves[index]
         print("You have selected: " + str(move))
-        mb.make_move(move, 'X')
+        if jump:
+            mb.make_jump(move, 'X')
+        else:
+            mb.make_move(move, 'X')
     else:
         print("INVALID MOVE")
     mb.display()
 
 
 
-
-
-
-
-
-
 # helpers
+
 def start():
     mb = Board()
     mb.init_setup()
